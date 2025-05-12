@@ -27,7 +27,7 @@ namespace NotePad
             InitializeFontStyleComboBox();
         }
 
-        private void btnOpen_Click(object sender, EventArgs e)
+        private void btnopen_Click(object sender, EventArgs e)
         {
             // 設置對話方塊標題
             openFileDialog1.Title = "選擇檔案";
@@ -89,7 +89,7 @@ namespace NotePad
 
 
 
-        private void btnSave_Click(object sender, EventArgs e)
+        private void btnsave_Click(object sender, EventArgs e)
         {
             // 設置對話方塊標題
             saveFileDialog1.Title = "儲存檔案";
