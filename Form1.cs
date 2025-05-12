@@ -32,7 +32,7 @@ namespace NotePad
             // 設置對話方塊標題
             openFileDialog1.Title = "選擇檔案";
             // 設置對話方塊篩選器，限制使用者只能選擇特定類型的檔案
-            openFileDialog1.Filter = "Word文字檔案(*.docx)|*.docx|文字檔案 (*.txt)|*.txt|所有檔案 (*.*)|*.*";
+            openFileDialog1.Filter = "RTF格式檔案 (*.rtf)|*.rtf|文字檔案 Word文字檔案(*.docx)|*.docx|文字檔案 (*.txt)|*.txt|所有檔案 (*.*)|*.*";
             // 如果希望預設開啟的檔案類型是文字檔案，可以這樣設置
             openFileDialog1.FilterIndex = 1;
             // 如果希望對話方塊在開啟時顯示的初始目錄，可以設置 InitialDirectory
@@ -95,7 +95,7 @@ namespace NotePad
             // 設置對話方塊標題
             saveFileDialog1.Title = "儲存檔案";
             // 設置對話方塊篩選器，限制使用者只能選擇特定類型的檔案
-            saveFileDialog1.Filter = "文字檔案 (*.txt)|*.txt|所有檔案 (*.*)|*.*";
+            saveFileDialog1.Filter = "RTF格式檔案 (*.rtf)|*.rtf|文字檔案 Word文字檔案(*.docx)|*.docx|文字檔案 文字檔案 (*.txt)|*.txt|所有檔案 (*.*)|*.*";
             // 如果希望預設儲存的檔案類型是文字檔案，可以這樣設置
             saveFileDialog1.FilterIndex = 1;
             // 如果希望對話方塊在開啟時顯示的初始目錄，可以設置 InitialDirectory
