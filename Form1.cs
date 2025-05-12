@@ -151,34 +151,9 @@ namespace NotePad
         private void rtbText_TextChanged(object sender, EventArgs e)
         {
             // 只有當isUndo這個變數是false的時候，才能堆疊文字編輯紀錄
-            if (isUndo == false)
-            {
-                // 將當前的文本內容加入堆疊
-                undoStack.Push(rtbText.Text);
-
-                // 確保堆疊中只保留最多10個紀錄
-                if (undoStack.Count > MaxHistoryCount)
-                {
-                    // 用一個臨時堆疊，將除了最下面一筆的文字記錄之外，將文字紀錄堆疊由上而下，逐一移除再堆疊到臨時堆疊之中
-                    Stack<string> tempStack = new Stack<string>();
-                    for (int i = 0; i < MaxHistoryCount; i++)
-                    {
-                        tempStack.Push(undoStack.Pop());
-                    }
-                    undoStack.Clear(); // 清空堆疊
-                                       // 文字編輯堆疊紀錄清空之後，再將暫存堆疊（tempStack）中的資料，逐一放回到文字編輯堆疊紀錄
-                    foreach (string item in tempStack)
-                    {
-                        undoStack.Push(item);
-                    }
-                }
-                UpdateListBox(); // 更新 ListBox
-            }
-            // 只有當isUndo這個變數是false的時候，才能堆疊文字編輯紀錄
-            // 只有當isUndo這個變數是false的時候，才能堆疊文字編輯紀錄
             if (isUndoRedo == false)
             {
-                redoStack.Push(rtbText.Text); // 將當前的文本內容加入堆疊
+                undoStack.Push(rtbText.Text); // 將當前的文本內容加入堆疊
                 redoStack.Clear();            // 清空重作堆疊
 
                 // 確保堆疊中只保留最多10個紀錄
@@ -200,6 +175,7 @@ namespace NotePad
                 UpdateListBox(); // 更新 ListBox
             }
         }
+        // 更新 ListBox
         void UpdateListBox()
         {
             listUndo.Items.Clear(); // 清空 ListBox 中的元素
@@ -209,7 +185,7 @@ namespace NotePad
             {
                 listUndo.Items.Add(item);
             }
-           
+
         }
 
         private void btnUndo_Click(object sender, EventArgs e)
@@ -270,5 +246,59 @@ namespace NotePad
                                                                      // 設置預設選中的項目為第一個樣式，即正常字體
             comboBoxStyle.SelectedIndex = 0;
         }
+
+        // 這個方法在 comboBox 的選項變更時觸發
+        private int selectionStart = 0;                            // 記錄文字反白的起點
+        private int selectionLength = 0;                           // 記錄文字反白的長度
+
+        private void comboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // 保存當前選擇的文字起始位置和長度
+            selectionStart = rtbText.SelectionStart;
+            selectionLength = rtbText.SelectionLength;
+
+            // 確保當前選擇的文字具有字型
+            if (rtbText.SelectionFont != null)
+            {
+                // 從下拉選單中獲取選擇的字型、大小和樣式
+                string selectedFont = comboBoxFont.SelectedItem?.ToString();
+                string selectedSizeStr = comboBoxSize.SelectedItem?.ToString();
+                string selectedStyleStr = comboBoxStyle.SelectedItem?.ToString();
+
+                // 確保字型、大小和樣式都已選擇
+                if (selectedFont != null && selectedSizeStr != null && selectedStyleStr != null)
+                {
+                    // 將選擇的大小字串轉換為浮點數
+                    float selectedSize = float.Parse(selectedSizeStr);
+                    // 將選擇的樣式字串轉換為 FontStyle 枚舉值
+                    FontStyle selectedStyle = (FontStyle)Enum.Parse(typeof(FontStyle), selectedStyleStr);
+
+                    // 獲取當前選擇的文字的字型
+                    Font currentFont = rtbText.SelectionFont;
+                    FontStyle newStyle = currentFont.Style;
+
+                    // 檢查是否需要應用新的樣式，並更新樣式
+                    if (comboBoxStyle.SelectedItem.ToString() == FontStyle.Bold.ToString())
+                        newStyle = FontStyle.Bold;
+                    else if (comboBoxStyle.SelectedItem.ToString() == FontStyle.Italic.ToString())
+                        newStyle = FontStyle.Italic;
+                    else if (comboBoxStyle.SelectedItem.ToString() == FontStyle.Underline.ToString())
+                        newStyle = FontStyle.Underline;
+                    else if (comboBoxStyle.SelectedItem.ToString() == FontStyle.Strikeout.ToString())
+                        newStyle = FontStyle.Strikeout;
+                    else
+                        newStyle = FontStyle.Regular;
+
+                    // 創建新的字型並應用到選擇的文字
+                    Font newFont = new Font(selectedFont, selectedSize, newStyle);
+                    rtbText.SelectionFont = newFont;
+                }
+            }
+
+            // 恢復選擇狀態
+            rtbText.Focus();
+            rtbText.Select(selectionStart, selectionLength);
+        }
     }
-}
+
+    } 
